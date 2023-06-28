@@ -22,6 +22,8 @@ public class UtenteService {
 	@Autowired
 	private UtenteRepository utenteRepo;
 
+	// CRUD utente
+
 	// creo l' utente
 	public Utente create(CreateUtentePayload payload) {
 
@@ -35,30 +37,13 @@ public class UtenteService {
 		return utenteRepo.save(u);
 	}
 
-	// cerco utente con id
-	public Utente findByEmail(String email) {
-		return utenteRepo.findByEmail(email)
-				.orElseThrow(() -> new NotFoundException("Utente con " + email + " non trovato!"));
-	}
-
-	public Utente findById(String id) {
-		return utenteRepo.findById(UUID.fromString(id))
-				.orElseThrow(() -> new NotFoundException("Utente con id: " + id + " non trovato!"));
-	}
-
-	public void aggiungiAdmin(String email) {
-		Utente found = this.findByEmail(email);
-		found.setRuolo(UtenteRuoli.ADMIN);
-		utenteRepo.save(found);
-	}
-
 	public Page<Utente> findAll(int page, String ordinamento) {
 		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
 		return utenteRepo.findAll(pagina);
 	}
 
 	public Utente findByIdAndUpadate(String id, UpdateUtentePayload body) {
-		Utente u = findById(id);
+		Utente u = this.findById(id);
 		u.setUsername(body.getUsername());
 		u.setEmail(body.getEmail());
 		u.setNome(body.getNome());
@@ -68,9 +53,34 @@ public class UtenteService {
 	}
 
 	public void findByIdAndDelete(String id) {
-		Utente u = findById(id);
+		Utente u = this.findById(id);
 
 		utenteRepo.delete(u);
 
+	}
+	// cerco utente con id
+
+	public Utente findById(String id) {
+
+		return utenteRepo.findById(UUID.fromString(id))
+				.orElseThrow(() -> new NotFoundException("Utente con id: " + id + " non trovato!"));
+	}
+
+// metodi custom
+	public Utente findByEmail(String email) {
+		return utenteRepo.findByEmail(email)
+				.orElseThrow(() -> new NotFoundException("Utente con " + email + " non trovato!"));
+	}
+
+	public void aggiungiAdmin(String email) {
+		Utente found = this.findByEmail(email);
+		found.setRuolo(UtenteRuoli.ADMIN);
+		utenteRepo.save(found);
+	}
+
+	public void aggiungiGameCreator(String email) {
+		Utente found = this.findByEmail(email);
+		found.setRuolo(UtenteRuoli.GAME_CREATOR);
+		utenteRepo.save(found);
 	}
 }

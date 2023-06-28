@@ -29,13 +29,11 @@ public class SecurityConfig {
 
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
-
 //		http.authorizeHttpRequests(auth -> auth.requestMatchers("/clienti/**").authenticated()
 //				.requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN").requestMatchers(HttpMethod.PUT, "/**")
 //				.hasAuthority("ADMIN").requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("ADMIN"));
 
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/utenti/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/utente/**").authenticated());
 
 		http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(corsFilter, JwtFilter.class);

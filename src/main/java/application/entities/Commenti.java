@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,7 +22,7 @@ public class Commenti {
 	@Id
 	@GeneratedValue
 	private UUID id;
-
+	@Column(length = 1000)
 	private String testo;
 
 	@ManyToOne

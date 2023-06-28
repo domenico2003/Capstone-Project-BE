@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,7 +23,9 @@ public class Post {
 	@Id
 	@GeneratedValue
 	private UUID id;
-
+	@Column(length = 600)
+	private String immagine;
+	@Column(length = 1000)
 	private String contenuto;
 
 	@ManyToOne
@@ -39,13 +42,17 @@ public class Post {
 	@OneToMany
 	private List<Commenti> commenti;
 
-	public Post(String contenuto, Gruppo gruppo, Utente utenteCheLoHaPublicato) {
+	public Post(String contenuto, Gruppo gruppo, Utente utenteCheLoHaPublicato, String immagine) {
 		super();
 		this.contenuto = contenuto;
 		this.gruppo = gruppo;
+		this.immagine = immagine;
 		this.utenteCheLoHaPublicato = utenteCheLoHaPublicato;
 		this.dataCreazione = LocalDate.now();
 		this.dataUltimoAggiornamento = LocalDate.now();
 	}
 
+	public void aggiungiMiPiace() {
+		this.numeroMiPiace += 1;
+	}
 }

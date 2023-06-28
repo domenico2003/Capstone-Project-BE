@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,9 +24,11 @@ public class Gruppo {
 	@Id
 	@GeneratedValue
 	private UUID id;
-
+	@Column(length = 600)
+	private String immagineGruppo;
 	private String nome;
 	private List<String> argomenti;
+	@Column(length = 1000)
 	private String descrizione;
 	@ManyToOne
 	private Utente fondatore;
@@ -38,8 +41,8 @@ public class Gruppo {
 	@OneToMany
 	private List<Post> post;
 
-	public Gruppo(String nome, List<String> argomenti, String descrizione, Utente fondatore) {
-		super();
+	public Gruppo(String nome, List<String> argomenti, String descrizione, Utente fondatore, String immagineGruppo) {
+		this.immagineGruppo = immagineGruppo;
 		this.nome = nome;
 		this.argomenti = argomenti;
 		this.descrizione = descrizione;

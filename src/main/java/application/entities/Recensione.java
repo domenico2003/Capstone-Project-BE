@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -26,6 +27,7 @@ public class Recensione {
 	@ManyToOne
 	private Videogiochi gioco;
 	private int valutazione;
+	@Column(length = 1000)
 	private String descrizione;
 	private LocalDate dataPublicazione;
 	private LocalDate dataUltimoAggiornamento;

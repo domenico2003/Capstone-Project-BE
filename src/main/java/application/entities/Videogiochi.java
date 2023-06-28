@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import application.entities.enums.Piattaforme;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +27,10 @@ public class Videogiochi {
 	@Id
 	@GeneratedValue
 	private UUID id;
+	@Column(length = 600)
+	private String copertina;
 	private String nome;
+	@Column(length = 1000)
 	private String descrizione;
 	private List<String> generi;
 	@Enumerated(EnumType.STRING)
@@ -44,9 +48,10 @@ public class Videogiochi {
 	private long sommaValutazioni = 0;
 	// costruttore
 
-	public Videogiochi(String nome, String descrizione, List<String> generi, List<Piattaforme> piattaforme,
-			String aziendaProprietaria, Utente responsabile, String videoTrailer, LocalDate dataRilascio) {
-
+	public Videogiochi(String nome, String copertina, String descrizione, List<String> generi,
+			List<Piattaforme> piattaforme, String aziendaProprietaria, Utente responsabile, String videoTrailer,
+			LocalDate dataRilascio) {
+		this.copertina = copertina;
 		this.nome = nome;
 		this.descrizione = descrizione;
 		this.generi = generi;

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import application.entities.enums.UtenteRuoli;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,6 +35,8 @@ public class Utente implements UserDetails {
 	private UUID id;
 	private String email;
 	private String password;
+	@Column(length = 600)
+	private String immagineProfilo = "https://thumbs.dreamstime.com/b/icona-predefinita-di-profilo-dell-avatar-105356015.jpg";
 	private String nome;
 	private String cognome;
 	private String username;
