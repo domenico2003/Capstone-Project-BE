@@ -15,12 +15,13 @@ import application.exceptions.BadRequestException;
 import application.exceptions.NotFoundException;
 import application.payloads.CreateUtentePayload;
 import application.payloads.UpdateUtentePayload;
+import application.payloads.UtenteDettaglio;
 import application.repository.UtenteRepository;
 
 @Service
 public class UtenteService {
 	@Autowired
-	private UtenteRepository utenteRepo;
+	UtenteRepository utenteRepo;
 
 	// CRUD utente
 
@@ -58,12 +59,20 @@ public class UtenteService {
 		utenteRepo.delete(u);
 
 	}
+
 	// cerco utente con id
-
 	public Utente findById(String id) {
-
 		return utenteRepo.findById(UUID.fromString(id))
 				.orElseThrow(() -> new NotFoundException("Utente con id: " + id + " non trovato!"));
+	}
+
+	public UtenteDettaglio findByIdDetails(String id) {
+
+		Utente utenteTrovato = this.findById(id);
+
+		return new UtenteDettaglio(utenteTrovato.getId(), utenteTrovato.getEmail(), utenteTrovato.getImmagineProfilo(),
+				utenteTrovato.getNome(), utenteTrovato.getCognome(), utenteTrovato.getUsername(),
+				utenteTrovato.getRuolo(), utenteTrovato.getVideogiochiAggiuntiAlSito(), utenteTrovato.getGruppo());
 	}
 
 // metodi custom

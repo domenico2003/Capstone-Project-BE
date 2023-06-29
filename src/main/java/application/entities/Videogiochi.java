@@ -64,12 +64,17 @@ public class Videogiochi {
 
 	// metodi
 
-	public void setSommaValutazioni(long sommaValutazioni) {
-		this.sommaValutazioni += sommaValutazioni;
+	public void SetSommaValutazioni(long valutazione) {
+		this.sommaValutazioni += valutazione;
+	}
+
+	public void SetDiminuisciSommaValutazioni(long valutazione) {
+		this.sommaValutazioni -= valutazione;
 	}
 
 	public void setValutazioneMedia() {
-		this.valutazioneMedia = (int) (this.getSommaValutazioni() / 7);
+		int numeroRecensioni = recensioni.size() + 1;
+		this.valutazioneMedia = (int) (this.getSommaValutazioni() / numeroRecensioni);
 	}
 
 }

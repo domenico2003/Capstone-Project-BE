@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@JsonIgnoreProperties({ "id", "utente" })
+@JsonIgnoreProperties({ "utente" })
 public class Preferiti {
 
 	@Id
