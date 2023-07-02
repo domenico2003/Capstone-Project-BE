@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,43 +14,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import application.entities.Utente;
-import application.payloads.UpdateUtentePayload;
-import application.payloads.UtenteDettaglio;
-import application.services.UtenteService;
+import application.entities.Post;
+import application.payloads.PostPayload;
+import application.services.PostService;
 
 @RestController
-@RequestMapping("/utente")
-public class UtenteController {
-
+@RequestMapping("/post")
+public class PostController {
 	@Autowired
-	UtenteService utenteService;
+	PostService postService;
 
-// crud per utente(senza create poichè sta in /auth)
+	// crud per post
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void findByIdAndDelete(@PathVariable String id) {
-		utenteService.findByIdAndDelete(id);
+		postService.findByIdAndDelete(id);
 	}
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public UtenteDettaglio findByid(@PathVariable String id) {
-		return utenteService.findByIdDetails(id);
+	public Post findByid(@PathVariable String id) {
+		return postService.findById(id);
 	}
 
 	@GetMapping("")
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Utente> findAll(@RequestParam(defaultValue = "0") int page,
+	public Page<Post> findAll(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "id") String order) {
-		return utenteService.findAll(page, order);
+		return postService.findAll(page, order);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Utente findByidAndUpdate(@PathVariable String id, @RequestBody UpdateUtentePayload payload) {
-		return utenteService.findByIdAndUpadate(id, payload);
+	public Post findByidAndUpdate(@PathVariable String id, @RequestBody PostPayload payload) {
+		return postService.findByIdAndUpdate(id, payload);
 	}
 
-//endpoint custom
+	@PostMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Post create(@RequestBody PostPayload payload) {
+		return postService.create(payload);
+	}
+	// endpoint custom
 }

@@ -42,7 +42,7 @@ public class RecensioneService {
 		return recRep.findAll(pagina);
 	}
 
-	public synchronized Recensione create(RecensionePayload body) {
+	public Recensione create(RecensionePayload body) {
 		Videogiochi videogiocoRecensito = videogiocoService.findById(body.getGiocoId());
 		videogiocoRecensito.SetSommaValutazioni(body.getValutazione());
 		videogiocoRecensito.setValutazioneMedia();
@@ -52,7 +52,7 @@ public class RecensioneService {
 		return recRep.save(recensioneCreata);
 	}
 
-	public synchronized Recensione findByIdAndUpdate(String id, RecensionePayload body) {
+	public Recensione findByIdAndUpdate(String id, RecensionePayload body) {
 		Recensione recensioneModificata = this.findById(id);
 
 		Videogiochi videogiocoRecensito = videogiocoService.findById(body.getGiocoId());
@@ -68,10 +68,25 @@ public class RecensioneService {
 	}
 
 	public void findByIdAndDelete(String id) {
+		int valutazione = 0;
+		String idVideogioco = "";
 		Recensione recensioneEliminata = this.findById(id);
-
+		valutazione = recensioneEliminata.getValutazione();
+		idVideogioco = recensioneEliminata.getGioco().getId().toString();
 		recRep.delete(recensioneEliminata);
+
+		aggiornaVideogiocoDelete(idVideogioco, valutazione);
+
+		System.out.println("deleted");
+
 	}
 
 //metodi custom
+
+	public void aggiornaVideogiocoDelete(String id, int valutazione) {
+		Videogiochi videogioco = videogiocoService.findById(id);
+		videogioco.SetDiminuisciSommaValutazioni(valutazione);
+		videogioco.setValutazioneMedia();
+		giocoRepo.save(videogioco);
+	}
 }

@@ -25,21 +25,21 @@ public class Commenti {
 	@Column(length = 1000)
 	private String testo;
 
-	@ManyToOne
+	@ManyToOne //
 	private Utente autore;
 
-	private LocalDate dataCreazione;
-	private LocalDate dataUltimoAggiornamento;
+	private LocalDate dataCreazione = LocalDate.now();
+	private LocalDate dataUltimoAggiornamento = LocalDate.now();
 
 	@ManyToOne
 	private Post postCommentato;
 
 	public Commenti(String testo, Utente autore, Post postCommentato) {
-		this.dataCreazione = LocalDate.now();
-		this.dataUltimoAggiornamento = LocalDate.now();
+
 		this.testo = testo;
 		this.autore = autore;
 		this.postCommentato = postCommentato;
+
 	}
 
 }

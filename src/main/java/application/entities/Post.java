@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class Post {
 	private LocalDate dataCreazione;
 	private LocalDate dataUltimoAggiornamento;
 
-	@OneToMany
+	@OneToMany(mappedBy = "postCommentato", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Commenti> commenti;
 
 	public Post(String contenuto, Gruppo gruppo, Utente utenteCheLoHaPublicato, String immagine) {

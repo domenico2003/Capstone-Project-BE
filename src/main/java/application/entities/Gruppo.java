@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,15 +31,16 @@ public class Gruppo {
 	private List<String> argomenti;
 	@Column(length = 1000)
 	private String descrizione;
-	@ManyToOne
+
+	@ManyToOne //
 	private Utente fondatore;
 	private LocalDate dataCreazione;
 	private LocalDate dataUltimoAggiornamento;
 
-	@OneToMany
+	@OneToMany(mappedBy = "gruppo")
 	private List<Utente> membri;
 
-	@OneToMany
+	@OneToMany(mappedBy = "gruppo", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> post;
 
 	public Gruppo(String nome, List<String> argomenti, String descrizione, Utente fondatore, String immagineGruppo) {

@@ -22,7 +22,8 @@ public class Recensione {
 	@Id
 	@GeneratedValue
 	private UUID id;
-	@ManyToOne
+
+	@ManyToOne //
 	private Utente utente;
 	@ManyToOne
 	private Videogiochi gioco;

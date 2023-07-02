@@ -16,12 +16,24 @@ import application.exceptions.NotFoundException;
 import application.payloads.CreateUtentePayload;
 import application.payloads.UpdateUtentePayload;
 import application.payloads.UtenteDettaglio;
+import application.repository.CommentiRepository;
+import application.repository.GruppoRepository;
+import application.repository.RecensioneRepository;
 import application.repository.UtenteRepository;
+import application.repository.VideogiochiRepository;
 
 @Service
 public class UtenteService {
 	@Autowired
 	UtenteRepository utenteRepo;
+	@Autowired
+	GruppoRepository gruppoRepo;
+	@Autowired
+	VideogiochiRepository giocoRepo;
+	@Autowired
+	RecensioneRepository receRepo;
+	@Autowired
+	CommentiRepository commRepo;
 
 	// CRUD utente
 
@@ -55,7 +67,26 @@ public class UtenteService {
 
 	public void findByIdAndDelete(String id) {
 		Utente u = this.findById(id);
-
+		// gruppo
+		gruppoRepo.findByFondatore(u).stream().forEach((group) -> {
+			group.setFondatore(null);
+			gruppoRepo.save(group);
+		});
+//videogioco
+		giocoRepo.findByResponsabile(u).stream().forEach((gioco) -> {
+			gioco.setResponsabile(null);
+			giocoRepo.save(gioco);
+		});
+		// recensione
+		receRepo.findByUtente(u).stream().forEach((rece) -> {
+			rece.setUtente(null);
+			receRepo.save(rece);
+		});
+		// commento
+		commRepo.findByAutore(u).stream().forEach((comm) -> {
+			comm.setAutore(null);
+			commRepo.save(comm);
+		});
 		utenteRepo.delete(u);
 
 	}

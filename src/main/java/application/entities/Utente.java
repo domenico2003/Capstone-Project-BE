@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import application.entities.enums.UtenteRuoli;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,7 +27,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @JsonIgnoreProperties({ "password", "accountNonExpired", "accountNonLocked", "enabled", "credentialsNonExpired",
-		"authorities", "videogiochiAggiuntiAlSito", "videogiochiPiaciuti", "postPublicati", "gruppo" })
+		"authorities", "videogiochiAggiuntiAlSito", "videogiochiPiaciuti", "postPublicati", "gruppo", "gruppiCreati",
+		"recensioniRilasciate", "commenti" })
 public class Utente implements UserDetails {
 
 	// colonne della tabella che si genera
@@ -49,15 +51,30 @@ public class Utente implements UserDetails {
 	private boolean isAccountNonExpired;
 	private boolean isAccountNonLocked;
 
-	@OneToMany
+	// videogiochi
+	@OneToMany(mappedBy = "responsabile")
 	private List<Videogiochi> videogiochiAggiuntiAlSito;
-	@OneToMany
+
+	@OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Preferiti> videogiochiPiaciuti;
 
-	@OneToMany
+	@OneToMany(mappedBy = "utenteCheLoHaPublicato", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> postPublicati;
-	@ManyToOne
+
+	// gruppi
+	@OneToMany(mappedBy = "fondatore")
+	private List<Gruppo> gruppiCreati;
+
+	// recensione
+	@OneToMany(mappedBy = "utente")
+	private List<Recensione> recensioniRilasciate;
+
+	@ManyToOne //
 	private Gruppo gruppo;
+
+	// commenti
+	@OneToMany(mappedBy = "autore")
+	private List<Commenti> commenti;
 
 	// costruttore
 	public Utente(String email, String password, String nome, String cognome, String username) {

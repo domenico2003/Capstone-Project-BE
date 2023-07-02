@@ -34,6 +34,12 @@ public class SecurityConfig {
 //				.hasAuthority("ADMIN").requestMatchers(HttpMethod.DELETE, "/**").hasAuthority("ADMIN"));
 
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/utente/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/commento/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/gruppo/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/post/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/preferiti/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/recensione/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/videogioco/**").authenticated());
 
 		http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(corsFilter, JwtFilter.class);

@@ -3,13 +3,15 @@ package application.payloads;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import application.entities.Gruppo;
 import application.entities.Videogiochi;
 import application.entities.enums.UtenteRuoli;
 import lombok.Data;
 
 @Data
-
+@JsonIgnoreProperties({ "videogiochiAggiuntiAlSito" })
 public class UtenteDettaglio {
 
 	private UUID id;

@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import application.entities.enums.Piattaforme;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@JsonIgnoreProperties({ "responsabile" })
+@JsonIgnoreProperties({ "responsabile", "aggiuntiHaiPreferiti", "recensioni", "sommaValutazioni" })
 public class Videogiochi {
 	// colonne della tabella che si genera
 	@Id
@@ -37,11 +38,15 @@ public class Videogiochi {
 	private List<Piattaforme> piattaforme;
 	private String aziendaProprietaria;
 
-	@ManyToOne
+	@ManyToOne //
 	private Utente responsabile;
 
-	@OneToMany
+	@OneToMany(mappedBy = "gioco", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Preferiti> aggiuntiHaiPreferiti;
+
+	@OneToMany(mappedBy = "gioco", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Recensione> recensioni;
+
 	private String videoTrailer;
 	private LocalDate dataRilascio;
 	private int valutazioneMedia = 0;
@@ -64,15 +69,15 @@ public class Videogiochi {
 
 	// metodi
 
-	public void SetSommaValutazioni(long valutazione) {
+	public synchronized void SetSommaValutazioni(long valutazione) {
 		this.sommaValutazioni += valutazione;
 	}
 
-	public void SetDiminuisciSommaValutazioni(long valutazione) {
+	public synchronized void SetDiminuisciSommaValutazioni(long valutazione) {
 		this.sommaValutazioni -= valutazione;
 	}
 
-	public void setValutazioneMedia() {
+	public synchronized void setValutazioneMedia() {
 		int numeroRecensioni = recensioni.size() + 1;
 		this.valutazioneMedia = (int) (this.getSommaValutazioni() / numeroRecensioni);
 	}

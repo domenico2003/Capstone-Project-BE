@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,43 +14,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import application.entities.Utente;
-import application.payloads.UpdateUtentePayload;
-import application.payloads.UtenteDettaglio;
-import application.services.UtenteService;
+import application.entities.Gruppo;
+import application.payloads.GruppoPayload;
+import application.services.GruppoService;
 
 @RestController
-@RequestMapping("/utente")
-public class UtenteController {
-
+@RequestMapping("/gruppo")
+public class GruppoController {
 	@Autowired
-	UtenteService utenteService;
+	GruppoService gruppoService;
 
-// crud per utente(senza create poichè sta in /auth)
+	// crud per recensione
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void findByIdAndDelete(@PathVariable String id) {
-		utenteService.findByIdAndDelete(id);
+		gruppoService.findByIdAndDelete(id);
 	}
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public UtenteDettaglio findByid(@PathVariable String id) {
-		return utenteService.findByIdDetails(id);
+	public Gruppo findByid(@PathVariable String id) {
+		return gruppoService.findById(id);
 	}
 
 	@GetMapping("")
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Utente> findAll(@RequestParam(defaultValue = "0") int page,
+	public Page<Gruppo> findAll(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "id") String order) {
-		return utenteService.findAll(page, order);
+		return gruppoService.findAll(page, order);
 	}
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Utente findByidAndUpdate(@PathVariable String id, @RequestBody UpdateUtentePayload payload) {
-		return utenteService.findByIdAndUpadate(id, payload);
+	public Gruppo findByidAndUpdate(@PathVariable String id, @RequestBody GruppoPayload payload) {
+		return gruppoService.findByIdAndUpdate(id, payload);
 	}
 
-//endpoint custom
+	@PostMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Gruppo create(@RequestBody GruppoPayload payload) {
+		return gruppoService.create(payload);
+	}
+	// endpoint custom
 }

@@ -11,9 +11,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import application.entities.Gruppo;
+import application.entities.Utente;
 import application.exceptions.NotFoundException;
 import application.payloads.GruppoPayload;
 import application.repository.GruppoRepository;
+import application.repository.UtenteRepository;
 
 @Service
 public class GruppoService {
@@ -23,6 +25,8 @@ public class GruppoService {
 
 	@Autowired
 	UtenteService userService;
+	@Autowired
+	UtenteRepository userRepo;
 //CRUD gruppo
 
 	public Gruppo findById(String id) {
@@ -36,8 +40,10 @@ public class GruppoService {
 	}
 
 	public Gruppo create(GruppoPayload body) {
-		Gruppo gruppoCreato = new Gruppo(body.getNome(), body.getArgomenti(), body.getDescrizione(),
-				userService.findById(body.getFondatoreId()), body.getImmagineGruppo());
+		Utente fondatore = userService.findById(body.getFondatoreId());
+		Gruppo gruppoCreato = new Gruppo(body.getNome(), body.getArgomenti(), body.getDescrizione(), fondatore,
+				body.getImmagineGruppo());
+		fondatore.setGruppo(gruppoCreato);
 		return gr.save(gruppoCreato);
 	}
 
@@ -55,8 +61,17 @@ public class GruppoService {
 	public void findByIdAndDelete(String id) {
 		Gruppo gruppoEliminato = this.findById(id);
 
+		userRepo.findByGruppo(gruppoEliminato).stream().forEach((user) -> {
+			user.setGruppo(null);
+			userRepo.save(user);
+		});
 		gr.delete(gruppoEliminato);
 	}
 
 //metodi custom
+
+	public Page<Gruppo> findLByFondatore(int page, String ordinamento, String idFondatore) {
+		Pageable pagina = PageRequest.of(page, 5, Sort.by(ordinamento));
+		return gr.findByFondatore(pagina, userService.findById(idFondatore));
+	}
 }
