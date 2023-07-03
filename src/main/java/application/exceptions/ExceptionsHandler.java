@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,6 +17,15 @@ public class ExceptionsHandler {
 	public ResponseEntity<ErrorsPayload> handleBadRequest(TokenNotValidException e) {
 
 		ErrorsPayload payload = new ErrorsPayload(e.getMessage(), new Date(), 403);
+
+		return new ResponseEntity<ErrorsPayload>(payload, HttpStatus.FORBIDDEN);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ErrorsPayload> handleAccessDenied(AccessDeniedException e) {
+
+		ErrorsPayload payload = new ErrorsPayload("accesso negato,non hai l'autorizaazzione per accedere!", new Date(),
+				403);
 
 		return new ResponseEntity<ErrorsPayload>(payload, HttpStatus.FORBIDDEN);
 	}

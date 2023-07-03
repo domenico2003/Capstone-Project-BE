@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import application.entities.Gruppo;
 import application.entities.Utente;
+import application.entities.Videogiochi;
 import application.entities.enums.UtenteRuoli;
 import application.exceptions.BadRequestException;
 import application.exceptions.NotFoundException;
@@ -108,10 +110,11 @@ public class UtenteService {
 
 // metodi custom
 	public Utente findByEmail(String email) {
-		return utenteRepo.findByEmail(email)
+		return this.utenteRepo.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException("Utente con " + email + " non trovato!"));
 	}
 
+// metodi ADMIN	
 	public void aggiungiAdmin(String email) {
 		Utente found = this.findByEmail(email);
 		found.setRuolo(UtenteRuoli.ADMIN);
@@ -121,6 +124,35 @@ public class UtenteService {
 	public void aggiungiGameCreator(String email) {
 		Utente found = this.findByEmail(email);
 		found.setRuolo(UtenteRuoli.GAME_CREATOR);
+		utenteRepo.save(found);
+	}
+
+	public Videogiochi aggiungiResponsabileAVideogioco(String videogiocoId, String emailNuovoResponsabile) {
+		Videogiochi giocoDaModificare = giocoRepo.findById(UUID.fromString(videogiocoId))
+				.orElseThrow(() -> new BadRequestException("videogioco con id: " + videogiocoId + " non trovato!"));
+
+		Utente responabile = this.findByEmail(emailNuovoResponsabile);
+		giocoDaModificare.setResponsabile(responabile);
+
+		return giocoRepo.save(giocoDaModificare);
+
+	}
+
+// metodi USER
+
+	public void uniscitiAGruppo(String id, String gruppoId) {
+		Utente found = this.findById(id);
+
+		Gruppo gruppo = gruppoRepo.findById(UUID.fromString(gruppoId))
+				.orElseThrow(() -> new BadRequestException("Gruppo con id: " + gruppoId + " non trovato!"));
+		found.setGruppo(gruppo);
+		utenteRepo.save(found);
+	}
+
+	public void abbandonaGruppo(String id) {
+		Utente found = this.findById(id);
+
+		found.setGruppo(null);
 		utenteRepo.save(found);
 	}
 }

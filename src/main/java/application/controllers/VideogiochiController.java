@@ -3,6 +3,7 @@ package application.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,9 @@ public class VideogiochiController {
 	VideogiochiService videogiochiService;
 
 	// crud per videogioco
+
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('GAME_CREATOR','ADMIN')")
 	@ResponseStatus(HttpStatus.OK)
 	public void findByIdAndDelete(@PathVariable String id) {
 		videogiochiService.findByIdAndDelete(id);
@@ -45,12 +48,14 @@ public class VideogiochiController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('GAME_CREATOR','ADMIN')")
 	@ResponseStatus(HttpStatus.OK)
 	public Videogiochi findByidAndUpdate(@PathVariable String id, @RequestBody VideogiochiPayload payload) {
 		return videogiochiService.findByIdAndUpdate(id, payload);
 	}
 
 	@PostMapping("")
+	@PreAuthorize("hasAnyAuthority('GAME_CREATOR','ADMIN')")
 	@ResponseStatus(HttpStatus.OK)
 	public Videogiochi create(@RequestBody VideogiochiPayload payload) {
 		return videogiochiService.create(payload);

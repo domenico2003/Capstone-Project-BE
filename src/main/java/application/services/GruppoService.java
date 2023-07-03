@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import application.entities.Gruppo;
 import application.entities.Utente;
+import application.exceptions.BadRequestException;
 import application.exceptions.NotFoundException;
 import application.payloads.GruppoPayload;
 import application.repository.GruppoRepository;
@@ -66,6 +67,17 @@ public class GruppoService {
 			userRepo.save(user);
 		});
 		gr.delete(gruppoEliminato);
+	}
+
+//metodi ADMIN
+
+	public Gruppo setNuovoFondatore(String emailFondatore, String idGruppo) {
+		Gruppo gruppo = this.findById(idGruppo);
+
+		Utente fondatore = userRepo.findByEmail(emailFondatore)
+				.orElseThrow(() -> new BadRequestException("Utente con email: " + emailFondatore + " non trovato"));
+		gruppo.setFondatore(fondatore);
+		return gr.save(gruppo);
 	}
 
 //metodi custom
