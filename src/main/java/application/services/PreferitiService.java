@@ -1,11 +1,13 @@
 package application.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import application.entities.Preferiti;
+import application.exceptions.BadRequestException;
 import application.exceptions.NotFoundException;
 import application.payloads.PreferitiPayload;
 import application.repository.PreferitiRepository;
@@ -30,9 +32,16 @@ public class PreferitiService {
 	}
 
 	public Preferiti create(PreferitiPayload body) {
-		Preferiti preferitoCreato = new Preferiti(userService.findById(body.getUtenteId()),
+		List<Preferiti> pref = prefrep.findByUtenteAndGioco(userService.findById(body.getUtenteId()),
 				videogiochiService.findById(body.getGiocoId()));
-		return prefrep.save(preferitoCreato);
+
+		if (pref.isEmpty()) {
+			Preferiti preferitoCreato = new Preferiti(userService.findById(body.getUtenteId()),
+					videogiochiService.findById(body.getGiocoId()));
+			return prefrep.save(preferitoCreato);
+		} else {
+			throw new BadRequestException("videogioco già presente tra i preferiti");
+		}
 	}
 
 	public void findByIdAndDelete(String id) {
@@ -41,4 +50,5 @@ public class PreferitiService {
 		prefrep.delete(preferitoEliminato);
 	}
 //metodi custom
+//	Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
 }
