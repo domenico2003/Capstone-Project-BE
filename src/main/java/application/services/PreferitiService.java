@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import application.entities.Preferiti;
@@ -50,5 +54,12 @@ public class PreferitiService {
 		prefrep.delete(preferitoEliminato);
 	}
 //metodi custom
-//	Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+
+	public Page<Preferiti> findByUtente(String id, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+
+		return prefrep.findByUtente(pagina, userService.findById(id));
+
+	}
+
 }

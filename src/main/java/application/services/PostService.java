@@ -35,7 +35,7 @@ public class PostService {
 	}
 
 	public Page<Post> findAll(int page, String ordinamento) {
-		Pageable pagina = PageRequest.of(page, 5, Sort.by(ordinamento));
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
 		return pr.findAll(pagina);
 	}
 
@@ -60,4 +60,16 @@ public class PostService {
 	}
 
 //metodi custom
+
+	// Find per gruppo
+	public Page<Post> findByGruppo(String idGruppo, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return pr.findByGruppo(pagina, gruppoService.findById(idGruppo));
+	}
+
+	// Find per utente
+	public Page<Post> findByUtente(String idUtente, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return pr.findByUtenteCheLoHaPublicato(pagina, userService.findById(idUtente));
+	}
 }

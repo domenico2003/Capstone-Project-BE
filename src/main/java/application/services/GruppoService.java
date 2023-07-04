@@ -1,6 +1,8 @@
 package application.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import application.entities.Argomento;
 import application.entities.Gruppo;
 import application.entities.Utente;
 import application.exceptions.BadRequestException;
 import application.exceptions.NotFoundException;
 import application.payloads.GruppoPayload;
+import application.repository.ArgomentoRepository;
 import application.repository.GruppoRepository;
 import application.repository.UtenteRepository;
 
@@ -23,7 +27,8 @@ public class GruppoService {
 
 	@Autowired
 	GruppoRepository gr;
-
+	@Autowired
+	ArgomentoRepository ar;
 	@Autowired
 	UtenteService userService;
 	@Autowired
@@ -42,8 +47,21 @@ public class GruppoService {
 
 	public Gruppo create(GruppoPayload body) {
 		Utente fondatore = userService.findById(body.getFondatoreId());
-		Gruppo gruppoCreato = new Gruppo(body.getNome(), body.getArgomenti(), body.getDescrizione(), fondatore,
-				body.getImmagineGruppo());
+		Gruppo gruppoCreato = new Gruppo(body.getNome(), body.getDescrizione(), fondatore, body.getImmagineGruppo());
+		for (String argomento : body.getArgomenti()) {
+			Argomento arg = ar.findByNomeIgnoreCase(argomento);
+
+			if (arg == null) {
+				Argomento argomentoSalvato = new Argomento(argomento);
+				ar.save(argomentoSalvato);
+
+				Argomento argomentoRicavato = ar.findByNomeIgnoreCase(argomento);
+				gruppoCreato.addArgomento(argomentoRicavato);
+			} else {
+				gruppoCreato.addArgomento(arg);
+			}
+		}
+
 		fondatore.setGruppo(gruppoCreato);
 		return gr.save(gruppoCreato);
 	}
@@ -51,11 +69,24 @@ public class GruppoService {
 	public Gruppo findByIdAndUpdate(String id, GruppoPayload body) {
 		Gruppo gruppoModificato = this.findById(id);
 		gruppoModificato.setNome(body.getNome());
-		gruppoModificato.setArgomenti(body.getArgomenti());
+
 		gruppoModificato.setDataUltimoAggiornamento(LocalDate.now());
 		gruppoModificato.setDescrizione(body.getDescrizione());
 		gruppoModificato.setImmagineGruppo(body.getImmagineGruppo());
+		gruppoModificato.setArgomenti(new ArrayList<Argomento>());
+		for (String argomento : body.getArgomenti()) {
+			Argomento arg = ar.findByNomeIgnoreCase(argomento);
 
+			if (arg == null) {
+				Argomento argomentoSalvato = new Argomento(argomento);
+				ar.save(argomentoSalvato);
+
+				Argomento argomentoRicavato = ar.findByNomeIgnoreCase(argomento);
+				gruppoModificato.addArgomento(argomentoRicavato);
+			} else {
+				gruppoModificato.addArgomento(arg);
+			}
+		}
 		return gr.save(gruppoModificato);
 	}
 
@@ -83,7 +114,35 @@ public class GruppoService {
 //metodi custom
 
 	public Page<Gruppo> findLByFondatore(int page, String ordinamento, String idFondatore) {
-		Pageable pagina = PageRequest.of(page, 5, Sort.by(ordinamento));
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
 		return gr.findByFondatore(pagina, userService.findById(idFondatore));
 	}
+
+	public Page<Gruppo> findByNome(int page, String ordinamento, String nome) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+		return gr.findByNomeStartingWithIgnoreCase(pagina, nome);
+	};
+
+	public Page<Gruppo> findByArgomenti(int page, String ordinamento, String argomento) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+		List<Argomento> arg = ar.findByNomeStartingWithIgnoreCase(argomento);
+
+		if (arg.size() == 1) {
+			return gr.findByArgomenti(pagina, arg.get(0));
+		} else if (arg.size() > 1) {
+			throw new BadRequestException("ricerca un genere più preciso!");
+		} else {
+			throw new NotFoundException("genere non trovato");
+		}
+	};
+
+	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, LocalDate da, LocalDate a) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+		return gr.findBydataCreazioneBetween(pagina, da, a);
+	};
+
+	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, LocalDate dataCreazione) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+		return gr.findBydataCreazione(pagina, dataCreazione);
+	};
 }

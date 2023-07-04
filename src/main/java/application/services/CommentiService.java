@@ -60,4 +60,9 @@ public class CommentiService {
 		cr.delete(commentoDaEliminare);
 	}
 //metodi custom
+
+	public Page<Commenti> findByIdPost(String id, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 5, Sort.by(order));
+		return cr.findByPostCommentato(pagina, postService.findById(id));
+	}
 }

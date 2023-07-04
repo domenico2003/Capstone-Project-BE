@@ -1,5 +1,7 @@
 package application.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -37,13 +39,6 @@ public class GruppoController {
 		return gruppoService.findById(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Gruppo> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return gruppoService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Gruppo findByidAndUpdate(@PathVariable String id, @RequestBody GruppoPayload payload) {
@@ -55,5 +50,28 @@ public class GruppoController {
 	public Gruppo create(@RequestBody GruppoPayload payload) {
 		return gruppoService.create(payload);
 	}
+
 	// endpoint custom
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Gruppo> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String idFondatore,
+			@RequestParam(required = false) String nome, @RequestParam(required = false) String argomento,
+			@RequestParam(required = false) LocalDate da, @RequestParam(required = false) LocalDate a) {
+		if (idFondatore != null) {
+			return gruppoService.findLByFondatore(page, order, idFondatore);
+		} else if (nome != null) {
+
+			return gruppoService.findByNome(page, order, nome);
+		} else if (argomento != null) {
+
+			return gruppoService.findByArgomenti(page, order, argomento);
+		} else if (da != null & a != null) {
+			return gruppoService.findBydataCreazione(page, order, da, a);
+		} else if (da != null) {
+			return gruppoService.findBydataCreazione(page, order, da);
+		} else {
+			return gruppoService.findAll(page, order);
+		}
+	}
 }

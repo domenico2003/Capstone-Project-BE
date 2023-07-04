@@ -41,13 +41,6 @@ public class UtenteController {
 		return utenteService.findByIdDetails(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Utente> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return utenteService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Utente findByidAndUpdate(@PathVariable String id, @RequestBody UpdateUtentePayload payload) {
@@ -55,6 +48,30 @@ public class UtenteController {
 	}
 
 //endpoint custom
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Utente> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String idGruppo,
+			@RequestParam(required = false) String nome, @RequestParam(required = false) String cognome,
+			@RequestParam(required = false) String username) {
+
+		if (idGruppo != null) {
+
+			return utenteService.findByGruppo(idGruppo, page, order);
+
+		} else if (nome != null) {
+
+			return utenteService.findByNome(nome, page, order);
+		} else if (cognome != null) {
+
+			return utenteService.findByCognome(cognome, page, order);
+		} else if (username != null) {
+
+			return utenteService.findByUsername(username, page, order);
+		} else {
+			return utenteService.findAll(page, order);
+		}
+	}
 
 	@PostMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)

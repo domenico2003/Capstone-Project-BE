@@ -16,5 +16,11 @@ public interface UtenteRepository extends JpaRepository<Utente, UUID> {
 
 	Page<Utente> findByGruppo(Pageable pagina, Gruppo gruppo);
 
+	Page<Utente> findByNomeStartingWithIgnoreCase(Pageable pagina, String nome);
+
+	Page<Utente> findByCognomeStartingWithIgnoreCase(Pageable pagina, String cognome);
+
+	Page<Utente> findByUsernameStartingWithIgnoreCase(Pageable pagina, String username);
+
 	List<Utente> findByGruppo(Gruppo gruppo);
 }

@@ -37,13 +37,6 @@ public class RecensioneController {
 		return recensioneService.findById(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Recensione> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return recensioneService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Recensione findByidAndUpdate(@PathVariable String id, @RequestBody RecensionePayload payload) {
@@ -55,5 +48,17 @@ public class RecensioneController {
 	public Recensione create(@RequestBody RecensionePayload payload) {
 		return recensioneService.create(payload);
 	}
+
 	// endpoint custom
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Recensione> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String giocoId) {
+		if (giocoId != null) {
+			return recensioneService.findByGioco(giocoId, page, order);
+		} else {
+
+			return recensioneService.findAll(page, order);
+		}
+	}
 }

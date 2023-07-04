@@ -32,6 +32,7 @@ public class AdminController {
 		if (gameCreator.equalsIgnoreCase("true")) {
 
 			userservice.aggiungiGameCreator(emailUtente);
+
 			return new ResponseEntity<ResponsePayload>(new ResponsePayload("operazione completata!"), HttpStatus.OK);
 		} else if (admin.equalsIgnoreCase("true")) {
 			userservice.aggiungiAdmin(emailUtente);

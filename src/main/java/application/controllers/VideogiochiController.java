@@ -1,5 +1,7 @@
 package application.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -40,13 +42,6 @@ public class VideogiochiController {
 		return videogiochiService.findById(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Videogiochi> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return videogiochiService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyAuthority('GAME_CREATOR','ADMIN')")
 	@ResponseStatus(HttpStatus.OK)
@@ -61,4 +56,34 @@ public class VideogiochiController {
 		return videogiochiService.create(payload);
 	}
 	// endpoint custom
+
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Videogiochi> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String responsabileEmail,
+			@RequestParam(required = false) String nome, @RequestParam(required = false) String genere,
+			@RequestParam(required = false) String aziendaProprietaria,
+			@RequestParam(defaultValue = "-1") int valutazioneMedia,
+			@RequestParam(required = false) LocalDate dataRilacioDa,
+			@RequestParam(required = false) LocalDate dataRilacioA) {
+
+		if (responsabileEmail != null) {
+
+			return videogiochiService.findByResponsabile(page, order, responsabileEmail);
+		} else if (nome != null) {
+			return videogiochiService.findByNome(page, order, nome);
+		} else if (genere != null) {
+			return videogiochiService.findByGeneri(page, order, genere);
+		} else if (aziendaProprietaria != null) {
+			return videogiochiService.findByAziendaProprietaria(page, order, aziendaProprietaria);
+		} else if (valutazioneMedia != -1) {
+			return videogiochiService.findByValutazioneMedia(page, order, valutazioneMedia);
+		} else if (dataRilacioDa != null & dataRilacioA != null) {
+			return videogiochiService.findByDataRilascio(page, order, dataRilacioDa, dataRilacioA);
+		} else if (dataRilacioDa != null) {
+			return videogiochiService.findByDataRilascio(page, order, dataRilacioDa);
+		} else {
+			return videogiochiService.findAll(page, order);
+		}
+	}
 }

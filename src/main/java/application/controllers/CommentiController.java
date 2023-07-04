@@ -38,13 +38,6 @@ public class CommentiController {
 		return commentiService.findById(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Commenti> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return commentiService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Commenti findByidAndUpdate(@PathVariable String id, @RequestBody CommentoPayload payload) {
@@ -57,4 +50,16 @@ public class CommentiController {
 		return commentiService.create(payload);
 	}
 	// endpoint custom
+
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Commenti> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String postId) {
+
+		if (postId != null) {
+			return commentiService.findByIdPost(postId, page, order);
+		} else {
+			return commentiService.findAll(page, order);
+		}
+	}
 }

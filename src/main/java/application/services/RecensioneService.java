@@ -89,4 +89,9 @@ public class RecensioneService {
 		videogioco.setValutazioneMedia();
 		giocoRepo.save(videogioco);
 	}
+
+	public Page<Recensione> findByGioco(String idGioco, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return recRep.findByGioco(pagina, videogiocoService.findById(idGioco));
+	}
 }

@@ -33,6 +33,7 @@ public class AuthController {
 		Utente u = utenteservice.findByEmail(body.getEmail());
 
 		String plainPW = body.getPassword();
+
 		String hashedPW = u.getPassword();
 
 		if (!bcrypt.matches(plainPW, hashedPW))

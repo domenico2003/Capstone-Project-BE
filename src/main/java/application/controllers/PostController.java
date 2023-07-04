@@ -37,13 +37,6 @@ public class PostController {
 		return postService.findById(id);
 	}
 
-	@GetMapping("")
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Post> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order) {
-		return postService.findAll(page, order);
-	}
-
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Post findByidAndUpdate(@PathVariable String id, @RequestBody PostPayload payload) {
@@ -56,4 +49,18 @@ public class PostController {
 		return postService.create(payload);
 	}
 	// endpoint custom
+
+	@GetMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Post> findAll(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String userId,
+			@RequestParam(required = false) String gruppoId) {
+		if (userId != null) {
+			return postService.findByUtente(userId, page, order);
+		} else if (gruppoId != null) {
+			return postService.findByGruppo(gruppoId, page, order);
+		} else {
+			return postService.findAll(page, order);
+		}
+	}
 }

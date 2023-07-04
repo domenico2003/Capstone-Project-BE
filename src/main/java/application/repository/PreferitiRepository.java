@@ -15,4 +15,5 @@ public interface PreferitiRepository extends JpaRepository<Preferiti, UUID> {
 	Page<Preferiti> findByUtente(Pageable page, Utente utente);
 
 	List<Preferiti> findByUtenteAndGioco(Utente utente, Videogiochi gioco);
+
 }

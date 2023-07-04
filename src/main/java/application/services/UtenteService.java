@@ -37,7 +37,7 @@ public class UtenteService {
 	@Autowired
 	CommentiRepository commRepo;
 
-	// CRUD utente
+// CRUD utente
 
 	// creo l' utente
 	public Utente create(CreateUtentePayload payload) {
@@ -74,7 +74,7 @@ public class UtenteService {
 			group.setFondatore(null);
 			gruppoRepo.save(group);
 		});
-//videogioco
+		// videogioco
 		giocoRepo.findByResponsabile(u).stream().forEach((gioco) -> {
 			gioco.setResponsabile(null);
 			giocoRepo.save(gioco);
@@ -113,6 +113,27 @@ public class UtenteService {
 		return this.utenteRepo.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException("Utente con " + email + " non trovato!"));
 	}
+
+	public Page<Utente> findByGruppo(String idGruppo, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return utenteRepo.findByGruppo(pagina, gruppoRepo.findById(UUID.fromString(idGruppo))
+				.orElseThrow(() -> new BadRequestException("Gruppo con id: " + idGruppo + " non trovato!")));
+	};
+
+	public Page<Utente> findByNome(String nome, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return utenteRepo.findByNomeStartingWithIgnoreCase(pagina, nome);
+	};
+
+	public Page<Utente> findByCognome(String cognome, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return utenteRepo.findByCognomeStartingWithIgnoreCase(pagina, cognome);
+	};
+
+	public Page<Utente> findByUsername(String username, int page, String order) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+		return utenteRepo.findByUsernameStartingWithIgnoreCase(pagina, username);
+	};
 
 // metodi ADMIN	
 	public void aggiungiAdmin(String email) {
