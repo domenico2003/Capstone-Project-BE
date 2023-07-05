@@ -32,6 +32,7 @@ public class SecurityConfig {
 
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 
+		http.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/videogioco/all/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/utente/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/commento/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/gruppo/**").authenticated());

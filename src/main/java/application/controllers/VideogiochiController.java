@@ -36,7 +36,7 @@ public class VideogiochiController {
 		videogiochiService.findByIdAndDelete(id);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/all/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Videogiochi findByid(@PathVariable String id) {
 		return videogiochiService.findById(id);
@@ -57,7 +57,7 @@ public class VideogiochiController {
 	}
 	// endpoint custom
 
-	@GetMapping("")
+	@GetMapping("/all")
 	@ResponseStatus(HttpStatus.OK)
 	public Page<Videogiochi> findAll(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String responsabileEmail,
