@@ -24,7 +24,7 @@ public class Post {
 	@Id
 	@GeneratedValue
 	private UUID id;
-	@Column(length = 600)
+	@Column(length = 6000)
 	private String immagine;
 	@Column(length = 1000)
 	private String contenuto;

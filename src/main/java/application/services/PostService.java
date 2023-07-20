@@ -34,8 +34,8 @@ public class PostService {
 				.orElseThrow(() -> new NotFoundException("post con id: " + id + " non trovato!"));
 	}
 
-	public Page<Post> findAll(int page, String ordinamento) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Post> findAll(int page) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by("dataCreazione").descending());
 		return pr.findAll(pagina);
 	}
 
@@ -62,14 +62,21 @@ public class PostService {
 //metodi custom
 
 	// Find per gruppo
-	public Page<Post> findByGruppo(String idGruppo, int page, String order) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+	public Page<Post> findByGruppo(String idGruppo, int page) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by("dataCreazione").descending());
 		return pr.findByGruppo(pagina, gruppoService.findById(idGruppo));
 	}
 
 	// Find per utente
-	public Page<Post> findByUtente(String idUtente, int page, String order) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
+	public Page<Post> findByUtente(String idUtente, int page) {
+		Pageable pagina = PageRequest.of(page, 10, Sort.by("dataCreazione").descending());
 		return pr.findByUtenteCheLoHaPublicato(pagina, userService.findById(idUtente));
 	}
+
+	public void addMiPiace(String idPost) {
+		Post post = this.findById(idPost);
+		post.aggiungiMiPiace();
+		pr.save(post);
+	}
+
 }

@@ -107,24 +107,24 @@ public class VideogiochiService {
 	}
 
 	// metodi custom
-	public Page<Videogiochi> findAll(int page, String ordinamento) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findAll(int page, String ordinamento, int size) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return vr.findAll(pagina);
 	}
 
-	public Page<Videogiochi> findByResponsabile(int page, String ordinamento, String responsabileEmail) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findByResponsabile(int page, String ordinamento, int size, String responsabileEmail) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		Utente resp = userService.findByEmail(responsabileEmail);
 		return vr.findByResponsabile(pagina, resp);
 	};
 
-	public Page<Videogiochi> findByNome(int page, String ordinamento, String nome) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findByNome(int page, String ordinamento, int size, String nome) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return vr.findByNomeStartingWithIgnoreCase(pagina, nome);
 	};
 
-	public Page<Videogiochi> findByGeneri(int page, String ordinamento, String genereNome) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findByGeneri(int page, String ordinamento, int size, String genereNome) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		List<Genere> gen = gr.findByNomeStartingWithIgnoreCase(genereNome);
 
 		if (gen.size() == 1) {
@@ -136,24 +136,31 @@ public class VideogiochiService {
 		}
 	};
 
-	public Page<Videogiochi> findByAziendaProprietaria(int page, String ordinamento, String aziendaProprietaria) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findByAziendaProprietaria(int page, String ordinamento, int size,
+			String aziendaProprietaria) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return vr.findByAziendaProprietariaStartingWithIgnoreCase(pagina, aziendaProprietaria);
 	};
 
-	public Page<Videogiochi> findByValutazioneMedia(int page, String ordinamento, int valutazioneMedia) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
-		return vr.findByValutazioneMedia(pagina, valutazioneMedia);
+	public Page<Videogiochi> findByValutazioneMedia(int page, String ordinamento, int size, int valutazioneMedia) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
+		return vr.findByValutazioneMediaGreaterThanEqual(pagina, valutazioneMedia);
 	};
 
-	public Page<Videogiochi> findByDataRilascio(int page, String ordinamento, LocalDate da, LocalDate a) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Videogiochi> findByDataRilascio(int page, String ordinamento, int size, LocalDate da, LocalDate a) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return vr.findByDataRilascioBetween(pagina, da, a);
 	};
 
-	public Page<Videogiochi> findByDataRilascio(int page, String ordinamento, LocalDate dataRilascio) {
+	public Page<Videogiochi> findByDataRilascio(int page, String ordinamento, int size, LocalDate dataRilascio) {
 
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return vr.findByDataRilascio(pagina, dataRilascio);
 	};
+
+	// metodi generi
+	public List<Genere> findAllGeneri() {
+
+		return gr.findAll();
+	}
 }

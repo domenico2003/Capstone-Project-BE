@@ -63,6 +63,7 @@ public class UtenteService {
 		u.setEmail(body.getEmail());
 		u.setNome(body.getNome());
 		u.setCognome(body.getCognome());
+		u.setImmagineProfilo(body.getImmagineProfilo());
 		return utenteRepo.save(u);
 
 	}
@@ -172,6 +173,13 @@ public class UtenteService {
 
 	public void abbandonaGruppo(String id) {
 		Utente found = this.findById(id);
+		Gruppo gruppoAbbandonato = gruppoRepo.findById((found.getGruppo().getId()))
+				.orElseThrow(() -> new BadRequestException(
+						"Gruppo con id: " + found.getGruppo().getId().toString() + " non trovato!"));
+		if (gruppoAbbandonato.getFondatore().getId() == found.getId()) {
+			gruppoAbbandonato.setFondatore(null);
+			gruppoRepo.save(gruppoAbbandonato);
+		}
 
 		found.setGruppo(null);
 		utenteRepo.save(found);

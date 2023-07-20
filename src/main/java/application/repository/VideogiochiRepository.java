@@ -21,7 +21,7 @@ public interface VideogiochiRepository extends JpaRepository<Videogiochi, UUID> 
 
 	Page<Videogiochi> findByAziendaProprietariaStartingWithIgnoreCase(Pageable pagina, String aziendaProprietaria);
 
-	Page<Videogiochi> findByValutazioneMedia(Pageable pagina, int valutazioneMedia);
+	Page<Videogiochi> findByValutazioneMediaGreaterThanEqual(Pageable pagina, int valutazioneMedia);
 
 	Page<Videogiochi> findByDataRilascioBetween(Pageable pagina, LocalDate da, LocalDate a);
 

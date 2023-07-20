@@ -1,6 +1,6 @@
 package application.services;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class PreferitiService {
 	}
 
 	public Preferiti create(PreferitiPayload body) {
-		List<Preferiti> pref = prefrep.findByUtenteAndGioco(userService.findById(body.getUtenteId()),
+		Optional<Preferiti> pref = prefrep.findByUtenteAndGioco(userService.findById(body.getUtenteId()),
 				videogiochiService.findById(body.getGiocoId()));
 
 		if (pref.isEmpty()) {
@@ -59,6 +59,13 @@ public class PreferitiService {
 		Pageable pagina = PageRequest.of(page, 10, Sort.by(order));
 
 		return prefrep.findByUtente(pagina, userService.findById(id));
+
+	}
+
+	public Optional<Preferiti> isPreferito(String idUtente, String idVideogioco) {
+		Optional<Preferiti> pref = prefrep.findByUtenteAndGioco(userService.findById(idUtente),
+				videogiochiService.findById(idVideogioco));
+		return pref;
 
 	}
 

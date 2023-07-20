@@ -27,13 +27,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@JsonIgnoreProperties({ "responsabile", "aggiuntiHaiPreferiti", "recensioni", "sommaValutazioni" })
+@JsonIgnoreProperties({ "aggiuntiHaiPreferiti", "recensioni", "sommaValutazioni" })
 public class Videogiochi {
 	// colonne della tabella che si genera
 	@Id
 	@GeneratedValue
 	private UUID id;
-	@Column(length = 600)
+	@Column(length = 6000)
 	private String copertina;
 	//
 	private String nome;

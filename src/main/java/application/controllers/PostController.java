@@ -52,15 +52,20 @@ public class PostController {
 
 	@GetMapping("")
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Post> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String userId,
+	public Page<Post> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String userId,
 			@RequestParam(required = false) String gruppoId) {
 		if (userId != null) {
-			return postService.findByUtente(userId, page, order);
+			return postService.findByUtente(userId, page);
 		} else if (gruppoId != null) {
-			return postService.findByGruppo(gruppoId, page, order);
+			return postService.findByGruppo(gruppoId, page);
 		} else {
-			return postService.findAll(page, order);
+			return postService.findAll(page);
 		}
+	}
+
+	@PostMapping("/miPiace/{postId}")
+	@ResponseStatus(HttpStatus.OK)
+	public void create(@PathVariable String postId) {
+		postService.addMiPiace(postId);
 	}
 }

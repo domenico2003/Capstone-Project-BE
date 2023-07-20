@@ -77,8 +77,6 @@ public class RecensioneService {
 
 		aggiornaVideogiocoDelete(idVideogioco, valutazione);
 
-		System.out.println("deleted");
-
 	}
 
 //metodi custom

@@ -1,5 +1,7 @@
 package application.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,5 +43,10 @@ public class PreferitiController {
 	public Page<Preferiti> findByUtente(@PathVariable String userId, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "id") String order) {
 		return preferitiService.findByUtente(userId, page, order);
+	}
+
+	@GetMapping("/isPreferito")
+	public Optional<Preferiti> isPreferito(@RequestParam String idUtente, @RequestParam String idVideogioco) {
+		return preferitiService.isPreferito(idUtente, idVideogioco);
 	}
 }

@@ -41,7 +41,7 @@ public class AuthController {
 
 		String token = JwtTools.createToken(u);
 
-		return new ResponseEntity<>(new TokenPayload(token, u.getId()), HttpStatus.OK);
+		return new ResponseEntity<>(new TokenPayload(token), HttpStatus.OK);
 	}
 
 	@PostMapping("/register")

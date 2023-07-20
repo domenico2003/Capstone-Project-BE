@@ -37,7 +37,7 @@ public class Utente implements UserDetails {
 	private UUID id;
 	private String email;
 	private String password;
-	@Column(length = 600)
+	@Column(length = 6000)
 	private String immagineProfilo = "https://thumbs.dreamstime.com/b/icona-predefinita-di-profilo-dell-avatar-105356015.jpg";
 	private String nome;
 	private String cognome;

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
@@ -30,10 +31,10 @@ public class Gruppo {
 	@Id
 	@GeneratedValue
 	private UUID id;
-	@Column(length = 600)
+	@Column(length = 6000)
 	private String immagineGruppo;
 	private String nome;
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Argomento> argomenti = new ArrayList<Argomento>();
 	@Column(length = 1000)
 	private String descrizione;

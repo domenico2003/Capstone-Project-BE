@@ -1,6 +1,7 @@
 package application.controllers;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import application.entities.Genere;
 import application.entities.Videogiochi;
 import application.payloads.VideogiochiPayload;
 import application.services.VideogiochiService;
@@ -39,7 +41,14 @@ public class VideogiochiController {
 	@GetMapping("/all/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Videogiochi findByid(@PathVariable String id) {
+
 		return videogiochiService.findById(id);
+	}
+
+	@GetMapping("/generi")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Genere> findByid() {
+		return videogiochiService.findAllGeneri();
 	}
 
 	@PutMapping("/{id}")
@@ -60,30 +69,30 @@ public class VideogiochiController {
 	@GetMapping("/all")
 	@ResponseStatus(HttpStatus.OK)
 	public Page<Videogiochi> findAll(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String order, @RequestParam(required = false) String responsabileEmail,
-			@RequestParam(required = false) String nome, @RequestParam(required = false) String genere,
-			@RequestParam(required = false) String aziendaProprietaria,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String order,
+			@RequestParam(required = false) String responsabileEmail, @RequestParam(required = false) String nome,
+			@RequestParam(required = false) String genere, @RequestParam(required = false) String aziendaProprietaria,
 			@RequestParam(defaultValue = "-1") int valutazioneMedia,
 			@RequestParam(required = false) LocalDate dataRilacioDa,
 			@RequestParam(required = false) LocalDate dataRilacioA) {
 
 		if (responsabileEmail != null) {
 
-			return videogiochiService.findByResponsabile(page, order, responsabileEmail);
+			return videogiochiService.findByResponsabile(page, order, size, responsabileEmail);
 		} else if (nome != null) {
-			return videogiochiService.findByNome(page, order, nome);
+			return videogiochiService.findByNome(page, order, size, nome);
 		} else if (genere != null) {
-			return videogiochiService.findByGeneri(page, order, genere);
+			return videogiochiService.findByGeneri(page, order, size, genere);
 		} else if (aziendaProprietaria != null) {
-			return videogiochiService.findByAziendaProprietaria(page, order, aziendaProprietaria);
+			return videogiochiService.findByAziendaProprietaria(page, order, size, aziendaProprietaria);
 		} else if (valutazioneMedia != -1) {
-			return videogiochiService.findByValutazioneMedia(page, order, valutazioneMedia);
+			return videogiochiService.findByValutazioneMedia(page, order, size, valutazioneMedia);
 		} else if (dataRilacioDa != null & dataRilacioA != null) {
-			return videogiochiService.findByDataRilascio(page, order, dataRilacioDa, dataRilacioA);
+			return videogiochiService.findByDataRilascio(page, order, size, dataRilacioDa, dataRilacioA);
 		} else if (dataRilacioDa != null) {
-			return videogiochiService.findByDataRilascio(page, order, dataRilacioDa);
+			return videogiochiService.findByDataRilascio(page, order, size, dataRilacioDa);
 		} else {
-			return videogiochiService.findAll(page, order);
+			return videogiochiService.findAll(page, order, size);
 		}
 	}
 }

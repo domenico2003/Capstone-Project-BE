@@ -1,6 +1,6 @@
 package application.repository;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +14,6 @@ import application.entities.Videogiochi;
 public interface PreferitiRepository extends JpaRepository<Preferiti, UUID> {
 	Page<Preferiti> findByUtente(Pageable page, Utente utente);
 
-	List<Preferiti> findByUtenteAndGioco(Utente utente, Videogiochi gioco);
+	Optional<Preferiti> findByUtenteAndGioco(Utente utente, Videogiochi gioco);
 
 }

@@ -40,8 +40,8 @@ public class GruppoService {
 				.orElseThrow(() -> new NotFoundException("Gruppo con id: " + id + " non trovato!"));
 	}
 
-	public Page<Gruppo> findAll(int page, String ordinamento) {
-		Pageable pagina = PageRequest.of(page, 5, Sort.by(ordinamento));
+	public Page<Gruppo> findAll(int page, String ordinamento, int size) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return gr.findAll(pagina);
 	}
 
@@ -113,18 +113,18 @@ public class GruppoService {
 
 //metodi custom
 
-	public Page<Gruppo> findLByFondatore(int page, String ordinamento, String idFondatore) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Gruppo> findLByFondatore(int page, String ordinamento, int size, String idFondatore) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return gr.findByFondatore(pagina, userService.findById(idFondatore));
 	}
 
-	public Page<Gruppo> findByNome(int page, String ordinamento, String nome) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Gruppo> findByNome(int page, String ordinamento, int size, String nome) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return gr.findByNomeStartingWithIgnoreCase(pagina, nome);
 	};
 
-	public Page<Gruppo> findByArgomenti(int page, String ordinamento, String argomento) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Gruppo> findByArgomenti(int page, String ordinamento, int size, String argomento) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		List<Argomento> arg = ar.findByNomeStartingWithIgnoreCase(argomento);
 
 		if (arg.size() == 1) {
@@ -136,13 +136,17 @@ public class GruppoService {
 		}
 	};
 
-	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, LocalDate da, LocalDate a) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, int size, LocalDate da, LocalDate a) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return gr.findBydataCreazioneBetween(pagina, da, a);
 	};
 
-	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, LocalDate dataCreazione) {
-		Pageable pagina = PageRequest.of(page, 10, Sort.by(ordinamento));
+	public Page<Gruppo> findBydataCreazione(int page, String ordinamento, int size, LocalDate dataCreazione) {
+		Pageable pagina = PageRequest.of(page, size, Sort.by(ordinamento));
 		return gr.findBydataCreazione(pagina, dataCreazione);
 	};
+
+	public List<Argomento> findArgomenti() {
+		return ar.findAll();
+	}
 }
