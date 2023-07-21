@@ -59,6 +59,10 @@ public class UtenteService {
 
 	public Utente findByIdAndUpadate(String id, UpdateUtentePayload body) {
 		Utente u = this.findById(id);
+		if (!u.getEmail().equals(body.getEmail()))
+			utenteRepo.findByEmail(body.getEmail()).ifPresent(user -> {
+				throw new BadRequestException("Email " + user.getEmail() + " già utilizzata!");
+			});
 		u.setUsername(body.getUsername());
 		u.setEmail(body.getEmail());
 		u.setNome(body.getNome());
