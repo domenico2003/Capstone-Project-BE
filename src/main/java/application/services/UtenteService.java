@@ -180,11 +180,12 @@ public class UtenteService {
 		Gruppo gruppoAbbandonato = gruppoRepo.findById((found.getGruppo().getId()))
 				.orElseThrow(() -> new BadRequestException(
 						"Gruppo con id: " + found.getGruppo().getId().toString() + " non trovato!"));
-		if (gruppoAbbandonato.getFondatore().getId() == found.getId()) {
-			gruppoAbbandonato.setFondatore(null);
-			gruppoRepo.save(gruppoAbbandonato);
+		if (gruppoAbbandonato.getFondatore() != null) {
+			if (gruppoAbbandonato.getFondatore().getId() == found.getId()) {
+				gruppoAbbandonato.setFondatore(null);
+				gruppoRepo.save(gruppoAbbandonato);
+			}
 		}
-
 		found.setGruppo(null);
 		utenteRepo.save(found);
 	}
